@@ -1,3 +1,3 @@
 # WindowsDataTypes
 
-A description of this package.
+Swift definitions for structures, enumerations and functions defined in [MS-DTYP](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-dtyp/)
