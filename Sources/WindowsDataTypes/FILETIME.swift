@@ -15,7 +15,12 @@ public struct FILETIME: CustomStringConvertible {
     public var dwLowDateTime: UInt32
     
     /// dwHighDateTime: A 32-bit unsigned integer that contains the high-order bits of the file time.
-    public let dwHighDateTime: UInt32
+    public var dwHighDateTime: UInt32
+    
+    public init(dwLowDateTime: UInt32, dwHighDateTime: UInt32) {
+        self.dwLowDateTime = dwLowDateTime
+        self.dwHighDateTime = dwHighDateTime
+    }
     
     public var rawValue: UInt64 {
         return (UInt64(dwHighDateTime) << 32) + UInt64(dwLowDateTime)
