@@ -24,5 +24,5 @@ public struct GUID {
     public var data3: UInt16
     
     /// Data4 (8 bytes): The value of the Data4 member (section 2.3.4), in little-endian byte order.
-    public var data4: UInt32
+    public var data4: UInt64
 }
