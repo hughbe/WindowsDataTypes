@@ -5,6 +5,7 @@
 //  Created by Hugh Bellamy on 06/10/2020.
 //
 
+import DataStream
 import Foundation
 
 /// [MS-DTYP] 2.3.3 FILETIME
@@ -20,6 +21,11 @@ public struct FILETIME: CustomStringConvertible {
     public init(dwLowDateTime: UInt32, dwHighDateTime: UInt32) {
         self.dwLowDateTime = dwLowDateTime
         self.dwHighDateTime = dwHighDateTime
+    }
+    
+    public init(dataStream: inout DataStream) throws {
+        self.dwLowDateTime = try dataStream.read(endianess: .littleEndian)
+        self.dwHighDateTime = try dataStream.read(endianess: .littleEndian)
     }
     
     public var rawValue: UInt64 {
