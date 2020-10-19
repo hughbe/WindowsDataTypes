@@ -34,11 +34,11 @@ public struct FILETIME: CustomStringConvertible {
     
     public var date: Date {
         let windowsTicks: UInt64 = 10000000
-        let secondsToUnixEpoch: UInt64 = 11644473600
+        let secondsToUnixEpoch: Int64 = 11644473600
         
         let rawValue = self.rawValue
         let seconds = rawValue / windowsTicks
-        let unixTimestamp = seconds - secondsToUnixEpoch
+        let unixTimestamp = Int64(seconds) - secondsToUnixEpoch
         return Date(timeIntervalSince1970: TimeInterval(unixTimestamp))
     }
     
