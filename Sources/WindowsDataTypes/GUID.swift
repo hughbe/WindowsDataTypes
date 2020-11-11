@@ -33,6 +33,29 @@ public struct GUID: CustomStringConvertible, Hashable {
         self.data3 = data3
         self.data4 = data4
     }
+    public init(_ data1: UInt32,
+                _ data2: UInt16,
+                _ data3: UInt16,
+                _ data4: UInt8,
+                _ data5: UInt8,
+                _ data6: UInt8,
+                _ data7: UInt8,
+                _ data8: UInt8,
+                _ data9: UInt8,
+                _ data10: UInt8,
+                _ data11: UInt8) {
+        self.data1 = data1
+        self.data2 = data2
+        self.data3 = data3
+        self.data4 = UInt64(data4) |
+            (UInt64(data5) >> 8) |
+            (UInt64(data6) >> 16) |
+            (UInt64(data7) >> 24) |
+            (UInt64(data8) >> 32) |
+            (UInt64(data9) >> 40) |
+            (UInt64(data10) >> 48) |
+            (UInt64(data11) >> 56)
+    }
     
     public init(dataStream: inout DataStream) throws {
         /// Data1 (4 bytes): The value of the Data1 member (section 2.3.4), in little-endian byte order.
