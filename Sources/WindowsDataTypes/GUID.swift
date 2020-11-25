@@ -25,14 +25,28 @@ public struct GUID: CustomStringConvertible, Hashable {
     public var data3: UInt16
     
     /// Data4 (8 bytes): The value of the Data4 member (section 2.3.4), in little-endian byte order.
-    public var data4: UInt64
+    public var data4: [UInt8]
     
-    public init(_ data1: UInt32, _ data2: UInt16, _ data3: UInt16, _ data4: UInt64) {
+    public init(_ data1: UInt32, _ data2: UInt16, _ data3: UInt16, _ data4: [UInt8]) {
         self.data1 = data1
         self.data2 = data2
         self.data3 = data3
         self.data4 = data4
     }
+    
+    public init(_ data1: UInt32, _ data2: UInt16, _ data3: UInt16, _ data4: UInt64) {
+        self.data1 = data1
+        self.data2 = data2
+        self.data3 = data3
+        
+        var data4LE = data4.littleEndian
+        self.data4 = [UInt8](withUnsafePointer(to: &data4LE) {
+            $0.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout<UInt64>.size) {
+                UnsafeBufferPointer(start: $0, count: MemoryLayout<UInt64>.size)
+            }
+        })
+    }
+
     public init(_ data1: UInt32,
                 _ data2: UInt16,
                 _ data3: UInt16,
@@ -47,14 +61,7 @@ public struct GUID: CustomStringConvertible, Hashable {
         self.data1 = data1
         self.data2 = data2
         self.data3 = data3
-        self.data4 = UInt64(data4) |
-            (UInt64(data5) >> 8) |
-            (UInt64(data6) >> 16) |
-            (UInt64(data7) >> 24) |
-            (UInt64(data8) >> 32) |
-            (UInt64(data9) >> 40) |
-            (UInt64(data10) >> 48) |
-            (UInt64(data11) >> 56)
+        self.data4 = [data4, data5, data6, data7, data8, data9, data10, data11]
     }
     
     public init(dataStream: inout DataStream) throws {
@@ -68,14 +75,15 @@ public struct GUID: CustomStringConvertible, Hashable {
         self.data3 = try dataStream.read(endianess: .littleEndian)
         
         /// Data4 (8 bytes): The value of the Data4 member (section 2.3.4), in little-endian byte order.
-        self.data4 = try dataStream.read(endianess: .littleEndian)
+        self.data4 = try dataStream.readBytes(count: 8)
     }
     
     public var description: String {
         func string<T>(value: T) -> String where T: FixedWidthInteger {
-            return String(String(value, radix: 16, uppercase: true).padLeft(toLength: MemoryLayout<T>.size * 2, withPad: "0"))
+            return String(String(value, radix: 16, uppercase: true)
+                            .padLeft(toLength: MemoryLayout<T>.size * 2, withPad: "0"))
         }
         
-        return "\(string(value: data1))-\(string(value: data2))-\(string(value: data3))-\(string(value: data4))"
+        return "\(string(value: data1))-\(string(value: data2))-\(string(value: data3))-\(string(value: data4[0]))\(string(value: data4[1]))-\(string(value: data4[2]))\(string(value: data4[3]))\(string(value: data4[4]))\(string(value: data4[5]))\(string(value: data4[6]))\(string(value: data4[7]))"
     }
 }
