@@ -9,7 +9,7 @@ final class SIDTests: XCTestCase {
                 0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x0B, 0x0B,
                 0xFE, 0x7F, 0x03, 0x00, 0x30, 0x4C, 0x53, 0x34
             ]
-            var dataStream = DataStream(buffer: buffer)
+            var dataStream = DataStream(buffer)
             let sid = try SID(dataStream: &dataStream, endianess: .littleEndian)
             XCTAssertEqual(0x01, sid.revision)
             XCTAssertEqual(0x02, sid.subAuthorityCount)
@@ -29,7 +29,7 @@ final class SIDTests: XCTestCase {
                 0x5B, 0x1A, 0xE9, 0x73, 0x11, 0x61, 0x1B, 0x45,
                 0xF9, 0x12, 0x00, 0x00,
             ]
-            var dataStream = DataStream(buffer: buffer)
+            var dataStream = DataStream(buffer)
             let sid = try SID(dataStream: &dataStream, endianess: .littleEndian)
             XCTAssertEqual(0x01, sid.revision)
             XCTAssertEqual(0x05, sid.subAuthorityCount)
