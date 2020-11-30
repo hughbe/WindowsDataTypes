@@ -46,6 +46,11 @@ public struct GUID: CustomStringConvertible, Hashable {
             }
         })
     }
+    
+    public init(_ data1: UInt32, _ data2: UInt16, _ data3: UInt16, _ data4: UInt16, _ data5: UInt64) {
+        let data4Actual = data5 | (UInt64(data4 & 0xFF) << 48) | ((UInt64(data4) >> 8) << 56)
+        self.init(data1, data2, data3, data4Actual.bigEndian)
+    }
 
     public init(_ data1: UInt32,
                 _ data2: UInt16,
