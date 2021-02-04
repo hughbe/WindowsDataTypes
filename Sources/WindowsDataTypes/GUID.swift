@@ -69,15 +69,15 @@ public struct GUID: CustomStringConvertible, Hashable {
         self.data4 = [data4, data5, data6, data7, data8, data9, data10, data11]
     }
     
-    public init(dataStream: inout DataStream) throws {
+    public init(dataStream: inout DataStream, endianess: Endianess = .littleEndian) throws {
         /// Data1 (4 bytes): The value of the Data1 member (section 2.3.4), in little-endian byte order.
-        self.data1 = try dataStream.read(endianess: .littleEndian)
+        self.data1 = try dataStream.read(endianess: endianess)
         
         /// Data2 (2 bytes): The value of the Data2 member (section 2.3.4), in little-endian byte order.
-        self.data2 = try dataStream.read(endianess: .littleEndian)
+        self.data2 = try dataStream.read(endianess: endianess)
         
         /// Data3 (2 bytes): The value of the Data3 member (section 2.3.4), in little-endian byte order.
-        self.data3 = try dataStream.read(endianess: .littleEndian)
+        self.data3 = try dataStream.read(endianess: endianess)
         
         /// Data4 (8 bytes): The value of the Data4 member (section 2.3.4), in little-endian byte order.
         self.data4 = try dataStream.readBytes(count: 8)
@@ -90,5 +90,12 @@ public struct GUID: CustomStringConvertible, Hashable {
         }
         
         return "\(string(value: data1))-\(string(value: data2))-\(string(value: data3))-\(string(value: data4[0]))\(string(value: data4[1]))-\(string(value: data4[2]))\(string(value: data4[3]))\(string(value: data4[4]))\(string(value: data4[5]))\(string(value: data4[6]))\(string(value: data4[7]))"
+    }
+    
+    public func write(to dataStream: inout OutputDataStream, endianess: Endianess = .littleEndian) {
+        dataStream.write(data1, endianess: endianess)
+        dataStream.write(data2, endianess: endianess)
+        dataStream.write(data3, endianess: endianess)
+        dataStream.write(data4)
     }
 }
